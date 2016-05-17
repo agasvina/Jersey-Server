@@ -1,0 +1,43 @@
+buildscript {
+  repositories {
+    jcenter()
+  }
+  dependencies {
+    classpath 'org.akhikhl.gretty:gretty:1.2.4'
+  }
+}
+  
+repositories {
+  jcenter()
+  mavenCentral()
+}
+
+apply plugin: 'java'
+apply plugin: 'groovy'
+apply plugin: 'org.akhikhl.gretty'
+
+dependencies {
+   compile "javax.ws.rs:jsr311-api:1.1"
+   compile "com.sun.jersey:jersey-core:1.9.1"
+   compile "com.sun.jersey:jersey-server:1.9.1"
+   compile "com.sun.jersey:jersey-json:1.9.1"
+ 
+   // Dependency needed for interceptors and filters.
+   compile "com.sun.jersey.contribs:jersey-contribs:1.19"
+   
+   //MapDB
+   compile "org.mapdb:mapdb:1.0.8"
+   
+   //GSON
+   compile "com.google.code.gson:gson:2.4"
+   
+   testCompile "junit:junit:4.12"
+   testCompile "org.codehaus.groovy:groovy-all:2.4.3"
+   testCompile "org.spockframework:spock-core:1.0-groovy-2.4"
+}
+
+gretty {
+    contextPath = '/'
+    if(project.hasProperty('dbpath')) systemProperty 'dbpath' , "$projectDir/$dbpath"
+}
+
