@@ -20,6 +20,12 @@
     <param-value>com.lucareto.services</param-value>
    </init-param>
    
+   <init-param>
+    <param-name>com.sun.jersey.spi.container.ContainerResponseFilters</param-name>
+    <param-value>com.lucareto.filters.CORSFilter</param-value>
+   </init-param>
+   
+   
    
  </servlet>
  <servlet-mapping>
