@@ -1,10 +1,13 @@
-package com.lucareto.services;
+package com.lucareto.jersey.services;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -12,8 +15,8 @@ import javax.ws.rs.core.Response;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.lucareto.db.UserDB;
-import com.lucareto.db.model.User;
+import com.lucareto.jersey.db.UserDB;
+import com.lucareto.jersey.db.model.User;
  
 @Path("/user")
 public class UserService {
@@ -22,9 +25,9 @@ public class UserService {
     private Gson gson = new GsonBuilder().serializeNulls().create();
     
     @GET
-    @Path("/retrieve")
+    @Path("/retrieve/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUser(@QueryParam("id") String id) {
+    public Response getUser(@PathParam("id") String id) {
         return buildJson(userDB.getUser(id));
     }
     
@@ -35,8 +38,16 @@ public class UserService {
         return buildJson(userDB.getAllUsers());
     }
     
+    @OPTIONS
+    @Path("/retrieve/all")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUsersPreflight() {
+        return Response.ok().build();
+    }
+    
     @POST
     @Path("/create")
+    @RolesAllowed("ADMIN")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createUser(String userData) {
@@ -46,6 +57,7 @@ public class UserService {
     
     @DELETE
     @Path("/delete")
+    @RolesAllowed("ADMIN")
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteUser(@QueryParam("id") String id) {
         return buildJson(userDB.deleteUser(id));

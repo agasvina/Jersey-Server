@@ -1,4 +1,4 @@
-package com.lucareto.db;
+package com.lucareto.jersey.db;
 
 import java.io.File;
 import java.nio.file.Files;

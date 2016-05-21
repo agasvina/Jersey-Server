@@ -1,4 +1,4 @@
-package com.lucareto.db.model;
+package com.lucareto.jersey.db.model;
 
 import java.io.Serializable;
 

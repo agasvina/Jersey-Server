@@ -1,11 +1,11 @@
-package com.lucareto.db;
+package com.lucareto.jersey.db;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-import com.lucareto.db.model.User;
+import com.lucareto.jersey.db.model.User;
 
 public class UserDB extends MapDB<User> implements Serializable{
 

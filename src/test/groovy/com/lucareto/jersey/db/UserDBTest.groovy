@@ -1,6 +1,4 @@
-package com.lucareto.db
-
-import java.lang.reflect.Type
+package com.lucareto.jersey.db
 
 import spock.lang.Shared
 import spock.lang.Specification
@@ -8,7 +6,7 @@ import spock.lang.Specification
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
-import com.lucareto.db.model.User
+import com.lucareto.jersey.db.model.User
 
 class UserDBTest extends Specification{
 
