@@ -17,7 +17,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.lucareto.jersey.db.UserDB;
 import com.lucareto.jersey.db.model.User;
- 
+import static com.lucareto.jersey.util.Utils.buildJson;
+
+
 @Path("/user")
 public class UserService {
     
@@ -28,14 +30,14 @@ public class UserService {
     @Path("/retrieve/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUser(@PathParam("id") String id) {
-        return buildJson(userDB.getUser(id));
+        return buildJson(gson.toJson(userDB.getUser(id)));
     }
     
     @GET
     @Path("/retrieve/all")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUsers() {
-        return buildJson(userDB.getAllUsers());
+        return buildJson(gson.toJson(userDB.getAllUsers()));
     }
     
     @OPTIONS
@@ -52,7 +54,7 @@ public class UserService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response createUser(String userData) {
         User toBeCreated = gson.fromJson(userData, User.class);
-        return buildJson(userDB.addUser(toBeCreated));
+        return buildJson(gson.toJson(userDB.addUser(toBeCreated)));
     }
     
     @DELETE
@@ -60,10 +62,7 @@ public class UserService {
     @RolesAllowed("ADMIN")
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteUser(@QueryParam("id") String id) {
-        return buildJson(userDB.deleteUser(id));
+        return buildJson(gson.toJson(userDB.deleteUser(id)));
     }
     
-    private Response buildJson(Object object) {
-        return Response.ok(gson.toJson(object),MediaType.APPLICATION_JSON).build();
-    }
 }
