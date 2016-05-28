@@ -2,6 +2,7 @@ package com.lucareto.jersey.services;
 
 import java.util.Date;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -19,16 +20,18 @@ import static com.lucareto.jersey.util.Utils.buildJson;
 @Path("/article")
 public class ArticleService {
 
+    //TODO: put in utils (duplication detected)
     private Gson gson = new GsonBuilder().setPrettyPrinting()
             .serializeNulls().setDateFormat("yyyy-MM-dd'T'HH:mm:ssz").create();
     
     @POST
+    @RolesAllowed("ADMIN, REPORTER, EDITOR")
     @Path("/create")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createUser(String article) {
         Article createdArticle = gson.fromJson(article, Article.class);
-        createdArticle.setDate(new Date());
+        createdArticle.setCreatedDate(new Date());
         createdArticle.setId(Utils.generateUrn(Article.NID));
         //TODO: Use mongodb 
         return buildJson(gson.toJson(createdArticle));

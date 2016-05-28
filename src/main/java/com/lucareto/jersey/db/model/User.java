@@ -2,51 +2,29 @@ package com.lucareto.jersey.db.model;
 
 import java.io.Serializable;
 
-public class User  implements Serializable{
-    
-    private static final long serialVersionUID = 833345861967299144L;
+public class User implements Serializable{
 
-    private String id;
+    private static final long serialVersionUID = -8041797624979735132L;
     
-    private String name;
-    
+    private String username;
     private String email;
-    
-    private String title;
-    
-    public User() {
+    private String password;
+    public String getUsername() {
+        return username;
     }
-
-    public String getId() {
-        return id;
+    public void setUsername(String username) {
+        this.username = username;
     }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getEmail() {
         return email;
     }
-
     public void setEmail(String email) {
         this.email = email;
     }
-
-    public String getTitle() {
-        return title;
+    public String getPassword() {
+        return password;
     }
-
-    public void setTitle(String title) {
-        this.title = title;
+    public void setPassword(String password) {
+        this.password = password;
     }
-
 }

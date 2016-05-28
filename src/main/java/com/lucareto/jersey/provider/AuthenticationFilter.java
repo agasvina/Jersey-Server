@@ -21,16 +21,21 @@ import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.internal.util.Base64;
 
+import com.lucareto.jersey.clients.db.MongoDBClient;
+import com.lucareto.jersey.clients.db.SessionDAO;
+
 public class AuthenticationFilter implements ContainerRequestFilter {
     
     @Context
     private ResourceInfo resourceInfo;
     private static final String AUTHORIZATION_PROPERTY = "Authorization";
-    private static final String AUTHENTICATION_SCHEME  = "Basic";
+    private static final String AUTHENTICATION_SCHEME  = "Bearer";
     
     private static final Response ACCESS_DENIED = Response.status(Response.Status.UNAUTHORIZED).build();
     private static final Response ACCESS_FORBIDDEN = Response.status(Response.Status.FORBIDDEN).build();
 
+    private SessionDAO sessionDAO = (new MongoDBClient()).getSessionDAO();
+    
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
        Method method = resourceInfo.getResourceMethod();
@@ -38,17 +43,14 @@ public class AuthenticationFilter implements ContainerRequestFilter {
            if(method.isAnnotationPresent(DenyAll.class)) {
                requestContext.abortWith(ACCESS_FORBIDDEN);
            }
+           
            final MultivaluedMap<String, String> headers = requestContext.getHeaders();
            final List<String> authorization = headers.get(AUTHORIZATION_PROPERTY);
            if(method.isAnnotationPresent(RolesAllowed.class)) {
               if(Objects.nonNull(authorization) && !authorization.isEmpty()) {
-                  String encodedUserPass = authorization.get(0).replaceFirst(AUTHENTICATION_SCHEME + " ", "");
-                  String usernamePassword = new String(Base64.decode(encodedUserPass.getBytes()));
-                  StringTokenizer tokenizer = new StringTokenizer(usernamePassword, ":");
-                  String username = tokenizer.nextToken();
-                  String password = tokenizer.nextToken();
+                  String token = authorization.get(0).replaceFirst(AUTHENTICATION_SCHEME + " ", "");
                   Set<String> roleSet = new HashSet<>(Arrays.asList(method.getAnnotation(RolesAllowed.class).value()));
-                  if(!isUserAllowed(username, password, roleSet)) 
+                  if(!isUserAllowed(token, roleSet)) 
                       requestContext.abortWith(ACCESS_DENIED);
               } else {
                   requestContext.abortWith(ACCESS_FORBIDDEN);
@@ -58,11 +60,9 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         
     }
     
-    //TODO: Use better authentication:
-    private boolean isUserAllowed(final String username, final String password, final Set<String> roleSet) {
-        if(username.equals("lucareto") && password.equals("password")) {
-            if(roleSet.contains("ADMIN"))
-                return true;
+    private boolean isUserAllowed(final String token, final Set<String> roleSet) {
+        if(Objects.nonNull(sessionDAO.findUserNameBySessionId(token))) {
+            return true;
         }
         return false;
     }

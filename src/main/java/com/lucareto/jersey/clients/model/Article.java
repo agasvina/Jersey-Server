@@ -12,9 +12,10 @@ public class Article implements Serializable, Node{
     private String title;
     private String body;
     private String authorId;
+    private String section;
     private boolean published;
     private boolean nominated;
-    private Date date;
+    private Date createdDate;
     
     @Override
     public String getId() {
@@ -48,6 +49,14 @@ public class Article implements Serializable, Node{
     public void setAuthorId(final String authorId) {
         this.authorId = authorId;
     }
+    
+    public String getSection() {
+        return section;
+    }
+    
+    public void setSection(final String section) {
+        this.section = section;
+    }
 
     public boolean getPublished() {
         return published;
@@ -65,11 +74,11 @@ public class Article implements Serializable, Node{
         this.nominated = nominated;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getCreatedDate() {
+        return createdDate;
     }
 
-    public void setDate(final Date date) {
-        this.date = date;
+    public void setCreatedDate(final Date date) {
+        this.createdDate = date;
     }
 }
