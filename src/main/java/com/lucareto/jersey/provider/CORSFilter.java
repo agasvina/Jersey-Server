@@ -1,4 +1,4 @@
-package com.lucareto.jersey.filters;
+package com.lucareto.jersey.provider;
 import java.io.IOException;
 
 import javax.ws.rs.container.ContainerRequestContext;

@@ -1,4 +1,4 @@
-package com.lucareto.jersey.clients.db;
+package com.lucareto.jersey.clients.db.collections;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
@@ -21,14 +21,14 @@ import com.mongodb.MongoException;
 public class UserDAO {
     private static final Logger logger = LoggerFactory.getLogger(UserDAO.class);
     
-    private static final String DB_NAME = "users";
+    private static final String COLLECTION_NAME = "users";
     
     private final DBCollection usersCollection;
     private Random random = new SecureRandom();
 
 
     public UserDAO(final DB blogDatabase) {
-        usersCollection = blogDatabase.getCollection(DB_NAME);
+        usersCollection = blogDatabase.getCollection(COLLECTION_NAME);
     }
     
     public boolean addUser(final String username, final String password, final String email) {

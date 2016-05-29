@@ -2,6 +2,7 @@ package com.lucareto.jersey.clients.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 public class Article implements Serializable, Node{
 
@@ -12,10 +13,12 @@ public class Article implements Serializable, Node{
     private String title;
     private String body;
     private String authorId;
-    private String section;
-    private boolean published;
-    private boolean nominated;
+    private int nominated;
+    
+    private List<String> tags;
+    
     private Date createdDate;
+    
     
     @Override
     public String getId() {
@@ -48,30 +51,6 @@ public class Article implements Serializable, Node{
 
     public void setAuthorId(final String authorId) {
         this.authorId = authorId;
-    }
-    
-    public String getSection() {
-        return section;
-    }
-    
-    public void setSection(final String section) {
-        this.section = section;
-    }
-
-    public boolean getPublished() {
-        return published;
-    }
-
-    public void setPublished(boolean published) {
-        this.published = published;
-    }
-
-    public boolean getNominated() {
-        return nominated;
-    }
-
-    public void setNominated(boolean nominated) {
-        this.nominated = nominated;
     }
 
     public Date getCreatedDate() {

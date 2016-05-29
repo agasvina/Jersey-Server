@@ -14,9 +14,10 @@ import javax.ws.rs.core.Response;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.lucareto.jersey.clients.db.MongoClientHolder;
 import com.lucareto.jersey.clients.db.MongoDBClient;
-import com.lucareto.jersey.clients.db.SessionDAO;
-import com.lucareto.jersey.clients.db.UserDAO;
+import com.lucareto.jersey.clients.db.collections.SessionDAO;
+import com.lucareto.jersey.clients.db.collections.UserDAO;
 import com.lucareto.jersey.db.model.User;
 import com.lucareto.jersey.util.Utils;
 
@@ -26,10 +27,9 @@ public class AuthorizationService {
     //TODO: put in utils (duplication detected)
     private Gson gson = new GsonBuilder().setPrettyPrinting()
             .serializeNulls().setDateFormat("yyyy-MM-dd'T'HH:mm:ssz").create();
-    private MongoDBClient mongoDBClient = new MongoDBClient();
     
-    private UserDAO userDAO = mongoDBClient.getUserDAO();
-    private SessionDAO sessionDAO = mongoDBClient.getSessionDAO();
+    private UserDAO userDAO = MongoClientHolder.getUserDAO();
+    private SessionDAO sessionDAO = MongoClientHolder.getSessionDAO();
     
     @POST
     @Path("/signup")

@@ -1,4 +1,4 @@
-package com.lucareto.jersey.clients.db;
+package com.lucareto.jersey.clients.db.collections;
 
 import java.util.Date;
 
@@ -14,12 +14,12 @@ import com.mongodb.DBCollection;
 public class ArticleDAO {
     private static final Logger logger = LoggerFactory.getLogger(ArticleDAO.class);
 
-    private static final String DB_NAME = "articles";
+    private static final String COLLECTION_NAME = "articles";
     
     private DBCollection postsCollection;
     
     public ArticleDAO(final DB blogDatabase) {
-        postsCollection = blogDatabase.getCollection(DB_NAME);
+        postsCollection = blogDatabase.getCollection(COLLECTION_NAME);
     }
     
     public String addArticle(final Article article) {
@@ -32,8 +32,6 @@ public class ArticleDAO {
         mongoArticle.append("body", article.getBody());
         mongoArticle.append("authorId", article.getAuthorId());
         //TODO:change into is...
-        mongoArticle.append("published", article.getPublished());
-        mongoArticle.append("nominated", article.getNominated());
         mongoArticle.append("createdDate", article.getCreatedDate());
         try {
             postsCollection.insert(mongoArticle);

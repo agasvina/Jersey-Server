@@ -1,17 +1,15 @@
 package com.lucareto.jersey.clients.db;
 
-import java.io.IOException;
 import java.net.UnknownHostException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import com.lucareto.jersey.clients.db.collections.ArticleDAO;
+import com.lucareto.jersey.clients.db.collections.SessionDAO;
+import com.lucareto.jersey.clients.db.collections.UserDAO;
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 
 public class MongoDBClient {
-    private static final Logger logger = LoggerFactory.getLogger(MongoDBClient.class);
     
     //TODO: Use config.yaml;
     private static final String MONGO_CLIENT_URI = "mongodb://localhost:27017";

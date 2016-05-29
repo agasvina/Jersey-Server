@@ -9,7 +9,7 @@
  * divested of its trade secrets, irrespective of what has been
  * deposited with the U.S. Copyright Office.
  */
-package com.lucareto.jersey.clients.db;
+package com.lucareto.jersey.clients.db.collections;
 
 import java.security.SecureRandom;
 import java.util.Objects;
@@ -22,12 +22,12 @@ import com.mongodb.DBObject;
 import org.apache.commons.codec.binary.Base64;
 
 public class SessionDAO {
-    private static final String DB_NAME = "sessions";
+    private static final String COLLECTION_NAME = "sessions";
     
     private final DBCollection sessionsCollection;
     
     public SessionDAO(final DB blogDatabase) {
-        sessionsCollection = blogDatabase.getCollection(DB_NAME);
+        sessionsCollection = blogDatabase.getCollection(COLLECTION_NAME);
     }
     
     public String findUserNameBySessionId(final String sessionID) {

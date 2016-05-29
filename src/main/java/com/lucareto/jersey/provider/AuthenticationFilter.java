@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.StringTokenizer;
 
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.PermitAll;
@@ -19,10 +18,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
-import org.glassfish.jersey.internal.util.Base64;
-
-import com.lucareto.jersey.clients.db.MongoDBClient;
-import com.lucareto.jersey.clients.db.SessionDAO;
+import com.lucareto.jersey.clients.db.MongoClientHolder;
+import com.lucareto.jersey.clients.db.collections.SessionDAO;
 
 public class AuthenticationFilter implements ContainerRequestFilter {
     
@@ -34,7 +31,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     private static final Response ACCESS_DENIED = Response.status(Response.Status.UNAUTHORIZED).build();
     private static final Response ACCESS_FORBIDDEN = Response.status(Response.Status.FORBIDDEN).build();
 
-    private SessionDAO sessionDAO = (new MongoDBClient()).getSessionDAO();
+    private SessionDAO sessionDAO = MongoClientHolder.getSessionDAO();
     
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
