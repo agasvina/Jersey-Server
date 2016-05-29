@@ -11,7 +11,7 @@ import com.mongodb.MongoClientURI;
 
 public class MongoDBClient {
     
-    //TODO: Use config.yaml;
+    //TODO: DYNAMICALLY SET THE URI FROM CONFIG.YAML;
     private static final String MONGO_CLIENT_URI = "mongodb://localhost:27017";
     private static final String DB_NAME = "newspaper";
     
@@ -19,7 +19,6 @@ public class MongoDBClient {
     private final SessionDAO sessionDAO;
     private final ArticleDAO articleDAO;
     
-    //TODO: implement as SINGLETON
     public MongoDBClient() {
         DB db = DBInstance.INSTANCE.getDb();
         

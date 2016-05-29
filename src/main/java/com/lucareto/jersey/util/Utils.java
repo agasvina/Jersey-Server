@@ -7,14 +7,26 @@ import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-public class Utils {
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.lucareto.jersey.clients.model.User;
 
+public class Utils {
+    private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssz";
+
+    public static final Gson gson = new GsonBuilder().setPrettyPrinting()
+            .serializeNulls().setDateFormat(DATE_FORMAT).create();
+    
     public static String generateUrn(String NID) {
         return NID + UUID.randomUUID().toString();
     }
     
-    public static boolean validateSignup(String username, String password, String email,
+    public static boolean validateSignup(User user,
                                   Map<String, Object> errors) {
+        String username = user.getUsername();
+        String password = user.getPassword();
+        String email = user.getEmail();
+        
         String USER_RE = "^[a-zA-Z0-9_-]{3,20}$";
         String PASS_RE = "^.{3,20}$";
         String EMAIL_RE = "^[\\S]+@[\\S]+\\.[\\S]+$";
@@ -35,9 +47,8 @@ public class Utils {
         return errors.isEmpty();
     }
     
-    
-    public static Response buildJson(String jsonObject) {
-        return Response.ok(jsonObject,MediaType.APPLICATION_JSON).build();
+    public static Response buildJson(Object jsonObject) {
+        return Response.ok(gson.toJson(jsonObject),MediaType.APPLICATION_JSON).build();
     }
     
 }

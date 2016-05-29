@@ -12,9 +12,11 @@ import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.lucareto.jersey.clients.model.User;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
 import com.mongodb.MongoException;
 
 
@@ -31,26 +33,33 @@ public class UserDAO {
         usersCollection = blogDatabase.getCollection(COLLECTION_NAME);
     }
     
-    public boolean addUser(final String username, final String password, final String email) {
-        String passwordHash = makePasswordHash(password,Integer.toString(random.nextInt()));
-        
-        BasicDBObject user = new BasicDBObject();
-        user.append("_id", username).append("password", passwordHash);
-        if(Objects.nonNull(email) && !email.isEmpty()) {
-            user.append("email", email);
-        }
+    public boolean addUser(User user) {
+        String passwordHash = makePasswordHash(user.getPassword(),Integer.toString(random.nextInt()));
+        user.setPassword(passwordHash);
         
         try {
-            usersCollection.insert(user);
+            usersCollection.insert(user.createDBObject());
             return true;
         } catch (MongoException.DuplicateKey e) {
-            logger.warn("Username is no available" + username);
+            logger.warn("Username is no available" + user.getUsername());
         }
         return false;
         
     }
+    
+    public boolean validateLogin(final User user) {
+        DBObject userObject = usersCollection.findOne(new BasicDBObject("_id", user.getUsername()));
+        if(Objects.nonNull(userObject)) {
+            String hashedAndSalted = userObject.get("password").toString();
+            String salt = hashedAndSalted.split(",")[1];
+            if(hashedAndSalted.equals(makePasswordHash(user.getPassword(), salt)))
+                return true;
+        }
+        return false;
+    }
+    
 
-    //TODO: implement better encyption 
+    //TODO: IMPLEMENT BETTER ENCRYPTION
     private String makePasswordHash(String password, String salt) {
         try {
             String saltedAndHashed = password + "," + salt;

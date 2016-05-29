@@ -25,8 +25,8 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     
     @Context
     private ResourceInfo resourceInfo;
-    private static final String AUTHORIZATION_PROPERTY = "Authorization";
-    private static final String AUTHENTICATION_SCHEME  = "Bearer";
+    public static final String AUTHORIZATION_PROPERTY = "Authorization";
+    public static final String AUTHENTICATION_SCHEME  = "Bearer";
     
     private static final Response ACCESS_DENIED = Response.status(Response.Status.UNAUTHORIZED).build();
     private static final Response ACCESS_FORBIDDEN = Response.status(Response.Status.FORBIDDEN).build();

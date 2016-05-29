@@ -3,7 +3,7 @@ buildscript {
     jcenter()
   }
   dependencies {
-    classpath 'org.akhikhl.gretty:gretty:1.2.4'
+    classpath "org.akhikhl.gretty:gretty:1.2.4"
   }
 }
   
@@ -12,39 +12,34 @@ repositories {
   mavenCentral()
 }
 
-apply plugin: 'java'
-apply plugin: 'groovy'
-apply plugin: 'org.akhikhl.gretty'
+apply plugin: "java"
+apply plugin: "groovy"
+apply plugin: "org.akhikhl.gretty"
 
 dependencies {
-   compile 'javax.ws.rs:javax.ws.rs-api:2.0.1'
-   compile 'org.glassfish.jersey.containers:jersey-container-servlet:2.19'
-   compile 'org.glassfish.jersey.core:jersey-server:2.19'
-   compile 'com.google.code.gson:gson:2.2.4'
-
-   //MapDB
-   compile "org.mapdb:mapdb:1.0.8"
+   compile "javax.ws.rs:javax.ws.rs-api:${JAVAX_RS}"
+   compile "org.glassfish.jersey.containers:jersey-container-servlet:${GLASSFISH}"
+   compile "org.glassfish.jersey.core:jersey-server:${GLASSFISH}"
    
    //GSON
-   compile "com.google.code.gson:gson:2.4"
+   compile "com.google.code.gson:gson:${GSON}"
    
    //Logger
-   compile "org.slf4j:slf4j-api:1.7.12"
+   compile "org.slf4j:slf4j-api:${SLJ4_LOGGER}"
    
    //Mongo DB
-   compile "org.mongodb:mongo-java-driver:2.10.1";
+   compile "org.mongodb:mongo-java-driver:${MONGO_DB}";
    
    //Apache common
-   compile "org.apache.commons:commons-lang3:3.1";
-   compile "commons-codec:commons-codec:1.7";
+   compile "org.apache.commons:commons-lang3:${APACHE_COMMONS_LANG}";
+   compile "commons-codec:commons-codec:${APACHE_COMMONS_CODEC}";
    
-   testCompile "junit:junit:4.12"
-   testCompile "org.codehaus.groovy:groovy-all:2.4.3"
-   testCompile "org.spockframework:spock-core:1.0-groovy-2.4"
+   testCompile "junit:junit:${JUNIT}"
+   testCompile "org.codehaus.groovy:groovy-all:${GROOVY}"
+   testCompile "org.spockframework:spock-core:${SPOCK}"
 }
 
 gretty {
     contextPath = '/'
-    if(project.hasProperty('dbpath')) systemProperty 'dbpath' , "$projectDir/$dbpath"
 }
 

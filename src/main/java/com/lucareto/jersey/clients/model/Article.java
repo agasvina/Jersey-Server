@@ -1,10 +1,14 @@
 package com.lucareto.jersey.clients.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Article implements Serializable, Node{
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
+
+public class Article implements Serializable, Node, MongoDBObject {
 
     private static final long serialVersionUID = 3667424756208005409L;
     public static final String NID = "article:";
@@ -15,7 +19,7 @@ public class Article implements Serializable, Node{
     private String authorId;
     private int nominated;
     
-    private List<String> tags;
+    private List<String> tags = new ArrayList<>();
     
     private Date createdDate;
     
@@ -59,5 +63,34 @@ public class Article implements Serializable, Node{
 
     public void setCreatedDate(final Date date) {
         this.createdDate = date;
+    }
+    
+    public int getNominated() {
+        return nominated;
+    }
+    
+    public void setNominated(final int nominated) {
+        this.nominated = nominated;
+    }
+    
+    public List<String> getTags() {
+        return tags;
+    }
+    
+    public void setTags(final List<String> tags){
+        this.tags = tags;
+    }
+
+    @Override
+    public DBObject createDBObject() {
+        BasicDBObject mongoArticle = new BasicDBObject();
+        mongoArticle.append("_id", id);
+        mongoArticle.append("title", title);
+        mongoArticle.append("body", body);
+        mongoArticle.append("authorId", authorId);
+        mongoArticle.append("nominated", nominated);
+        mongoArticle.append("tags", tags);
+        mongoArticle.append("createdDate", createdDate);
+        return mongoArticle;
     }
 }

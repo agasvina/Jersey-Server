@@ -1,6 +1,9 @@
 package com.lucareto.jersey.clients.db.collections;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +13,8 @@ import com.lucareto.jersey.util.Utils;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 
 public class ArticleDAO {
     private static final Logger logger = LoggerFactory.getLogger(ArticleDAO.class);
@@ -22,25 +27,37 @@ public class ArticleDAO {
         postsCollection = blogDatabase.getCollection(COLLECTION_NAME);
     }
     
-    public String addArticle(final Article article) {
+    public String createArticle(final Article article) {
+        article.setNominated(0);
         article.setId(Utils.generateUrn(Article.NID));
         article.setCreatedDate(new Date());
-        
-        BasicDBObject mongoArticle = new BasicDBObject();
-        mongoArticle.append("_id", article.getId());
-        mongoArticle.append("title", article.getTitle());
-        mongoArticle.append("body", article.getBody());
-        mongoArticle.append("authorId", article.getAuthorId());
-        //TODO:change into is...
-        mongoArticle.append("createdDate", article.getCreatedDate());
         try {
-            postsCollection.insert(mongoArticle);
+            postsCollection.insert(article.createDBObject());
             return article.getId();
         } catch (Exception e) {
             logger.error("Error inserting posts", e);
         }
         return null;
     }
+    
+    
+    public DBObject findById(String id) {
+        return postsCollection.findOne(new BasicDBObject("_id", id));
+    }
+
+    public List<DBObject> findByDateDescending(Integer limit) {
+        List<DBObject> posts = new ArrayList<>();
+        DBCursor cursor;
+        if(Objects.nonNull(limit)) 
+            cursor = postsCollection.find().sort(new BasicDBObject().append("createdDate", -1)).limit(limit);
+        else cursor = postsCollection.find().sort(new BasicDBObject().append("createdDate", -1));
+        try {
+            posts = cursor.toArray();
+        } finally {
+            cursor.close();
+        }
+        return posts;
+    } 
     
 
 }
