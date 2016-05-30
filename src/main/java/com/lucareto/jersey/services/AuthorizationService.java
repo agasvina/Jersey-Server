@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -34,14 +35,12 @@ public class AuthorizationService {
         Map<String, Object> validateResult = new HashMap<>();
         if(Utils.validateSignup(user, validateResult)) {
             if(!userDAO.addUser(user)) {
-                validateResult.put("success", false);
                 validateResult.put("reason", "Username is already in use");
                 return Response.status(Response.Status.UNAUTHORIZED)
                     .entity(validateResult).type(MediaType.APPLICATION_JSON).build();
             } else {
                 //TODO: USING JWT TOKEN
                 String sessionID = sessionDAO.startSession(user.getUsername());
-                validateResult.put("success", true);
                 validateResult.put("token", sessionID);
                 return buildJson(validateResult);
             }
@@ -50,17 +49,22 @@ public class AuthorizationService {
             .entity(validateResult).type(MediaType.APPLICATION_JSON).build();
         }
     }
+
     
+    @OPTIONS
+    @Path("/*")
+    public Response freeFlight() {
+        return Response.ok().build();
+    }
     
     @POST
-    @Path("/login")
+    @Path("/signin")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response signIn(String userValue) {
         User user = gson.fromJson(userValue, User.class);
         Map<String, Object> response = new HashMap<>();
         if(userDAO.validateLogin(user)) {
-            response.put("success", true);
             response.put("token", sessionDAO.startSession(user.getUsername()));
             return buildJson(response);
         }

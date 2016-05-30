@@ -11,6 +11,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
+import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -63,5 +64,11 @@ public class ArticleService {
     
     public String getToken(String authHeader) {
         return authHeader.replaceFirst(AUTHENTICATION_SCHEME + " ", "");
+    }
+    
+    @OPTIONS
+    @Path("/create")
+    public Response freeFlight() {
+        return Response.ok().build();
     }
 }

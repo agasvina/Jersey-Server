@@ -15,10 +15,13 @@ public class Article implements Serializable, Node, MongoDBObject {
 
     private String id;
     private String title;
-    private String body;
+    
+    //TODO: implements Draft.JS (contentState)
+    private Object body;
+    
     private String authorId;
     private int nominated;
-    
+   
     private List<String> tags = new ArrayList<>();
     
     private Date createdDate;
@@ -41,11 +44,11 @@ public class Article implements Serializable, Node, MongoDBObject {
         this.title = title;
     }
 
-    public String getBody() {
+    public Object getBody() {
         return body;
     }
 
-    public void setBody(final String body) {
+    public void setBody(final Object body) {
         this.body = body;
     }
 
