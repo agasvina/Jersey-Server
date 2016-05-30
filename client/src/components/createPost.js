@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import * as actions from '../actions';
 import {
   convertFromRaw,
   convertToRaw,
@@ -10,6 +9,8 @@ import {
   RichUtils,
   DefaultDraftBlockRenderMap
 } from 'draft-js';
+import * as actions from '../actions';
+
 
 const buttonStyle =  {
   marginTop: 10,
@@ -19,11 +20,6 @@ const buttonStyle =  {
 class Feature extends React.Component {
   constructor(props) {
     super(props);
-    // const blocks = convertFromRaw(rawContent);
-
-    // this.state = {
-    //   editorState: EditorState.createWithContent(blocks),
-    // };
 
     this.state = {editorState: EditorState.createEmpty()};
 
@@ -35,11 +31,16 @@ class Feature extends React.Component {
     this.toggleInlineStyle = (style) => this._toggleInlineStyle(style);
     this.handleCreatePost = () => {
       const content = this.state.editorState.getCurrentContent();
-      var post = {
+      const post = {
         body: convertToRaw(content),
         title: this.refs.title.value,
         tags: this.refs.tags.value.split(',')
       }
+      this.state = {
+        editorState: EditorState.createEmpty(),
+      };
+      this.refs.title.value = '';
+      this.refs.tags.value = '';
       this.props.createPost(post);
     };
   }
@@ -74,9 +75,6 @@ class Feature extends React.Component {
 
   render() {
     const {editorState} = this.state;
-
-    // If the user changes block type before entering any text, we can
-    // either style the placeholder or hide it. Let's just hide it now.
     let className = 'RichEditor-editor';
     var contentState = editorState.getCurrentContent();
     if (!contentState.hasText()) {
@@ -84,7 +82,7 @@ class Feature extends React.Component {
         className += ' RichEditor-hidePlaceholder';
       }
     }
-    //Only to Read: EditorState: readOnly={ true }
+
     return (
       <div>
         <input 

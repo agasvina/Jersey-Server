@@ -11,7 +11,7 @@ import Signout from './components/auth/signout';
 import Signup from './components/auth/signup';
 import CreatePost from './components/createPost';
 import RequireAuth from './components/auth/require_auth';
-import Welcome from './components/welcome';
+import PostList from './components/postList';
 import reducers from './reducers';
 import { AUTH_USER } from './actions/types';
 
@@ -28,7 +28,7 @@ ReactDOM.render(
   <Provider store={store}>
     <Router history={browserHistory}>
       <Route path="/" component={App}>
-        <IndexRoute component={Welcome} />
+        <IndexRoute component={PostList} />
         <Route path="signin" component={Signin} />
         <Route path="signout" component={Signout} />
         <Route path="signup" component={Signup} />

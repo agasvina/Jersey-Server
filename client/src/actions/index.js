@@ -4,7 +4,8 @@ import {
   AUTH_USER,
   UNAUTH_USER,
   AUTH_ERROR,
-  CREATE_POST
+  CREATE_POST,
+  FETCH_POSTS,
 } from './types';
 
 const ROOT_URL = 'http://localhost:8080';
@@ -56,9 +57,21 @@ export function createPost(post) {
     }).then(response => {
       dispatch({
         type: CREATE_POST,
-        payload: response.data.message
+        payload: response
       });
       browserHistory.push('/');
     });
   }
 }
+
+export function fetchPosts(post) {
+  return function(dispatch) {
+    axios.get(`${ROOT_URL}/article`).then(response => {
+      dispatch({
+        type: FETCH_POSTS,
+        payload: response
+      });
+    });
+  }
+}
+
