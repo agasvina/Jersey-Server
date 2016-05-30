@@ -1,5 +1,6 @@
 package com.lucareto.jersey.clients.db;
 
+import java.net.UnknownHostException;
 import java.util.Objects;
 
 import com.lucareto.jersey.clients.db.collections.ArticleDAO;
@@ -7,22 +8,26 @@ import com.lucareto.jersey.clients.db.collections.SessionDAO;
 import com.lucareto.jersey.clients.db.collections.UserDAO;
 
 public class MongoClientHolder {
-
+    //TODO: DYNAMICALLY SET THE URI FROM CONFIG.YAML;
+    private static final String MONGO_CLIENT_URI = "mongodb://localhost:27017";
+    private static final String DB_NAME = "newspaper";
+    
+    
     private final MongoDBClient mongoClient;
     
     private static volatile MongoClientHolder instance = null;
     
-    private MongoClientHolder() {
-        mongoClient = new MongoDBClient();
+    private MongoClientHolder(final String mongoURI, final String dbName) throws UnknownHostException {
+        mongoClient = new MongoDBClient(mongoURI, dbName);
     }
     
     private MongoDBClient getMongoDBClient() {
         return mongoClient;
     }
     
-    public static void load() {
+    public static void load() throws UnknownHostException {
         if(Objects.isNull(instance)) 
-            instance = new MongoClientHolder();
+            instance = new MongoClientHolder(MONGO_CLIENT_URI, DB_NAME);
         else throw new IllegalStateException("Instance already initialized");
     }
     

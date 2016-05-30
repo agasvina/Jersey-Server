@@ -26,7 +26,6 @@ public class Article implements Serializable, Node, MongoDBObject {
     
     private Date createdDate;
     
-    
     @Override
     public String getId() {
         return id;

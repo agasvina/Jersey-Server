@@ -26,6 +26,12 @@ public class AuthorizationService {
     private UserDAO userDAO = MongoClientHolder.getUserDAO();
     private SessionDAO sessionDAO = MongoClientHolder.getSessionDAO();
     
+    @OPTIONS
+    @Path("/*")
+    public Response freeFlight() {
+        return Response.ok().build();
+    }
+    
     @POST
     @Path("/signup")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -50,13 +56,6 @@ public class AuthorizationService {
         }
     }
 
-    
-    @OPTIONS
-    @Path("/*")
-    public Response freeFlight() {
-        return Response.ok().build();
-    }
-    
     @POST
     @Path("/signin")
     @Consumes(MediaType.APPLICATION_JSON)
