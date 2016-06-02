@@ -4,19 +4,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.lucareto.jersey.clients.model.User;
 
 public class Utils {
-    private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssz";
 
-    public static final Gson gson = new GsonBuilder().setPrettyPrinting()
-            .serializeNulls().setDateFormat(DATE_FORMAT).create();
-    
     public static String generateUrn(String NID) {
         return NID + UUID.randomUUID().toString();
     }
@@ -45,10 +36,6 @@ public class Utils {
             }
         } 
         return errors.isEmpty();
-    }
-    
-    public static Response buildJson(Object jsonObject) {
-        return Response.ok(gson.toJson(jsonObject),MediaType.APPLICATION_JSON).build();
     }
     
 }

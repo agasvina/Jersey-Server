@@ -5,19 +5,28 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
+@JsonPropertyOrder({"createdDate"})
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Article implements Serializable, Node, MongoDBObject {
 
     private static final long serialVersionUID = 3667424756208005409L;
     public static final String NID = "article:";
 
     private String id;
+    @NotNull(message="title is required")
     private String title;
     
     //TODO: implements Draft.JS (contentState)
-    private Object body;
+    @NotNull(message="Body is required")
+    private String body;
     
     private String authorId;
     private int nominated;
@@ -43,11 +52,11 @@ public class Article implements Serializable, Node, MongoDBObject {
         this.title = title;
     }
 
-    public Object getBody() {
+    public String getBody() {
         return body;
     }
 
-    public void setBody(final Object body) {
+    public void setBody(final String body) {
         this.body = body;
     }
 
@@ -82,9 +91,10 @@ public class Article implements Serializable, Node, MongoDBObject {
     public void setTags(final List<String> tags){
         this.tags = tags;
     }
-
+    
     @Override
-    public DBObject createDBObject() {
+    @JsonIgnore
+    public BasicDBObject createDBObject() {
         BasicDBObject mongoArticle = new BasicDBObject();
         mongoArticle.append("_id", id);
         mongoArticle.append("title", title);

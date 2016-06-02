@@ -21,14 +21,18 @@ dependencies {
    compile "org.glassfish.jersey.containers:jersey-container-servlet:${GLASSFISH}"
    compile "org.glassfish.jersey.core:jersey-server:${GLASSFISH}"
    
-   //GSON
-   compile "com.google.code.gson:gson:${GSON}"
+   //JACKSON
+   compile "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:${JACKSON}"
    
    //Logger
    compile "org.slf4j:slf4j-api:${SLJ4_LOGGER}"
    
    //Mongo DB
-   compile "org.mongodb:mongo-java-driver:${MONGO_DB}";
+   compile "org.mongodb:mongo-java-driver:${MONGO_DB}"
+   
+   //Guava
+   compile "com.google.guava:guava:${GUAVA}"
+   compile "org.glassfish.jersey.media:jersey-media-json-jackson:2.23"
    
    //Apache common
    compile "org.apache.commons:commons-lang3:${APACHE_COMMONS_LANG}";

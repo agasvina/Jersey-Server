@@ -1,22 +1,24 @@
 package com.lucareto.jersey;
 
-import java.net.UnknownHostException;
-
 import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.server.ServerProperties;
 
-import com.lucareto.jersey.clients.db.MongoClientHolder;
-import com.lucareto.jersey.provider.AuthenticationFilter;
-import com.lucareto.jersey.provider.CORSFilter;
-import com.lucareto.jersey.provider.GsonMessageBodyHandler;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 
 public class SimpleApplication extends ResourceConfig {
 
-    public SimpleApplication() throws UnknownHostException {
-        MongoClientHolder.load();
+    public SimpleApplication(){
+        
+        JacksonJsonProvider json = new JacksonJsonProvider()
+                .configure(SerializationFeature.WRITE_DATE_KEYS_AS_TIMESTAMPS, false)
+                .configure(SerializationFeature.INDENT_OUTPUT, true);
+        
         packages("com.lucareto.jersey");
-        register(org.glassfish.jersey.filter.LoggingFilter.class);
-        register(GsonMessageBodyHandler.class);
-        register(AuthenticationFilter.class);
-        register(CORSFilter.class);
+        register(json);
+        property(ServerProperties.BV_SEND_ERROR_IN_RESPONSE, true);
     }
+    
+    
+    
 }

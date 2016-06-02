@@ -1,13 +1,11 @@
 package com.lucareto.jersey.services;
 
-import static com.lucareto.jersey.provider.AuthenticationFilter.AUTHENTICATION_SCHEME;
-import static com.lucareto.jersey.provider.AuthenticationFilter.AUTHORIZATION_PROPERTY;
-import static com.lucareto.jersey.util.Utils.buildJson;
-import static com.lucareto.jersey.util.Utils.gson;
 
-import java.util.Objects;
+import java.util.List;
 
 import javax.annotation.security.RolesAllowed;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -22,48 +20,36 @@ import javax.ws.rs.core.Response;
 
 import com.lucareto.jersey.clients.db.MongoClientHolder;
 import com.lucareto.jersey.clients.db.collections.ArticleDAO;
-import com.lucareto.jersey.clients.db.collections.SessionDAO;
 import com.lucareto.jersey.clients.model.Article;
+import com.mongodb.DBObject;
 
 @Path("/article")
 public class ArticleService {
 
     private ArticleDAO articleDAO = MongoClientHolder.getArticleDAO();
-    private SessionDAO sessionDAO = MongoClientHolder.getSessionDAO();
-
     
     @POST
     @RolesAllowed("BLOGGER")
     @Path("/create")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createUser(String article, @HeaderParam(AUTHORIZATION_PROPERTY) String auth) {
-        Article createdArticle = gson.fromJson(article, Article.class);
-        
-        createdArticle.setAuthorId(sessionDAO.findUserNameBySessionId(getToken(auth)));
-        String articleId = articleDAO.createArticle(createdArticle);
-        
-        if(Objects.nonNull(articleId))
-            return buildJson(createdArticle);
-        return Response.status(Response.Status.BAD_REQUEST).build();
+    public DBObject createUser(@Valid @NotNull Article article, @HeaderParam("username") String username) {
+        article.setAuthorId(username);
+        return articleDAO.createArticle(article);
     }
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     //TODO: ADD PAGINATION 
-    public Response getArticles(String article, @QueryParam("limit") Integer limit) {
-        return buildJson(articleDAO.findByDateDescending(limit));
+    public  List<DBObject> getArticles(String article, @QueryParam("limit") Integer limit) {
+        return (articleDAO.findByDateDescending(limit));
     }
     
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getArticle(@PathParam("id") String id) {
-        return buildJson(articleDAO.findById(id));
-    }
-    
-    public String getToken(String authHeader) {
-        return authHeader.replaceFirst(AUTHENTICATION_SCHEME + " ", "");
+    public DBObject getArticle(@PathParam("id") String id) {
+        return articleDAO.findById(id);
     }
     
     @OPTIONS

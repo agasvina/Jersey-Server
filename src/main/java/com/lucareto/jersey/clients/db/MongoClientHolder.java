@@ -25,15 +25,15 @@ public class MongoClientHolder {
         return mongoClient;
     }
     
-    public static void load() throws UnknownHostException {
-        if(Objects.isNull(instance)) 
-            instance = new MongoClientHolder(MONGO_CLIENT_URI, DB_NAME);
-        else throw new IllegalStateException("Instance already initialized");
-    }
-    
     private static MongoClientHolder getInstance() {
-        if (instance == null) {
-            throw new IllegalStateException("Instance not initialized");
+        if (Objects.isNull(instance)) {
+            synchronized(MongoClientHolder.class) {
+                try {
+                    instance = new MongoClientHolder(MONGO_CLIENT_URI, DB_NAME);
+                } catch (UnknownHostException e) {
+                    throw new RuntimeException("Unable to connect the host", e);
+                }
+            }
         }
         return instance;
     }

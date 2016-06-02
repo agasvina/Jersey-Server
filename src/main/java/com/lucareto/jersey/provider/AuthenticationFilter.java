@@ -17,14 +17,18 @@ import javax.ws.rs.container.ResourceInfo;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.Provider;
 
 import com.lucareto.jersey.clients.db.MongoClientHolder;
 import com.lucareto.jersey.clients.db.collections.SessionDAO;
 
+@Provider
 public class AuthenticationFilter implements ContainerRequestFilter {
     
     @Context
     private ResourceInfo resourceInfo;
+    
+    
     public static final String AUTHORIZATION_PROPERTY = "Authorization";
     public static final String AUTHENTICATION_SCHEME  = "Bearer";
     
@@ -46,9 +50,12 @@ public class AuthenticationFilter implements ContainerRequestFilter {
            if(method.isAnnotationPresent(RolesAllowed.class)) {
               if(Objects.nonNull(authorization) && !authorization.isEmpty()) {
                   String token = authorization.get(0).replaceFirst(AUTHENTICATION_SCHEME + " ", "");
-                  Set<String> roleSet = new HashSet<>(Arrays.asList(method.getAnnotation(RolesAllowed.class).value()));
-                  if(!isUserAllowed(token, roleSet)) 
+                  //TODO: Implement ROLE
+                  //Set<String> roleSet = new HashSet<>(Arrays.asList(method.getAnnotation(RolesAllowed.class).value()));
+                  String username = sessionDAO.findUserNameBySessionId(token);
+                  if(Objects.isNull(username))
                       requestContext.abortWith(ACCESS_DENIED);
+                  requestContext.getHeaders().add("username", username);
               } else {
                   requestContext.abortWith(ACCESS_FORBIDDEN);
               }
@@ -57,11 +64,5 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         
     }
     
-    private boolean isUserAllowed(final String token, final Set<String> roleSet) {
-        if(Objects.nonNull(sessionDAO.findUserNameBySessionId(token))) {
-            return true;
-        }
-        return false;
-    }
 
 }

@@ -15,10 +15,9 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
+import com.mongodb.MongoException;
 
 public class ArticleDAO {
-    private static final Logger logger = LoggerFactory.getLogger(ArticleDAO.class);
-
     private static final String COLLECTION_NAME = "articles";
     
     private DBCollection postsCollection;
@@ -27,17 +26,13 @@ public class ArticleDAO {
         postsCollection = blogDatabase.getCollection(COLLECTION_NAME);
     }
     
-    public String createArticle(final Article article) {
+    public DBObject createArticle(final Article article){
         article.setNominated(0);
         article.setId(Utils.generateUrn(Article.NID));
         article.setCreatedDate(new Date());
-        try {
-            postsCollection.insert(article.createDBObject());
-            return article.getId();
-        } catch (Exception e) {
-            logger.error("Error inserting posts", e);
-        }
-        return null;
+        BasicDBObject dbo= article.createDBObject();
+        postsCollection.insert(dbo);
+        return findById(dbo.get("_id").toString());
     }
     
     
@@ -58,6 +53,5 @@ public class ArticleDAO {
         }
         return posts;
     } 
-    
 
 }
