@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
 import com.lucareto.jersey.clients.model.Article;
 import com.lucareto.jersey.util.Utils;
 import com.mongodb.BasicDBObject;
@@ -15,15 +17,17 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
-import com.mongodb.MongoException;
 
 public class ArticleDAO {
     private static final String COLLECTION_NAME = "articles";
     
     private DBCollection postsCollection;
+    private ListeningExecutorService service;
     
     public ArticleDAO(final DB blogDatabase) {
         postsCollection = blogDatabase.getCollection(COLLECTION_NAME);
+        service = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(10));
+
     }
     
     public DBObject createArticle(final Article article){
@@ -53,5 +57,33 @@ public class ArticleDAO {
         }
         return posts;
     } 
+    
+    public ListenableFuture<DBObject> createArticleAsync(final Article article) {
+        return service.submit(new Callable<DBObject>() {
+                    @Override
+                     public DBObject call() throws Exception {
+                         return createArticle(article);
+                     }
+                 });
+    }
+    
+    public ListenableFuture<DBObject> findByIdAsync(final String id) {
+        return service.submit(new Callable<DBObject>() {
+                    @Override
+                     public DBObject call() throws Exception {
+                         return findById(id);
+                     }
+                 });
+    }
+    
+    public ListenableFuture<List<DBObject>> findByDateDescendingAsync(final Integer limit) {
+        return service.submit(new Callable<List<DBObject>>() {
+                    @Override
+                     public List<DBObject> call() throws Exception {
+                         return findByDateDescending(limit);
+                     }
+                 });
+    }
+     
 
 }

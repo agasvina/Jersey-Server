@@ -24,8 +24,8 @@ import com.lucareto.jersey.util.Utils;
 @Path("/user")
 public class AuthorizationService {
     
-    private UserDAO userDAO = MongoClientHolder.getUserDAO();
-    private SessionDAO sessionDAO = MongoClientHolder.getSessionDAO();
+    @Context UserDAO userDAO;
+    @Context SessionDAO sessionDAO;
     
     @Context ContainerRequestContext request;
     

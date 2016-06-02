@@ -24,5 +24,12 @@ public class ExceptionMapperHolder {
         }
     }
     
+    @Provider
+    public static class RunTime implements ExceptionMapper<RuntimeException> {
+        public Response toResponse(RuntimeException ex) {
+            return Response.status(500).entity(ex.getMessage()).type(MediaType.TEXT_PLAIN).build();
+        }
+    }
+    
 }
 

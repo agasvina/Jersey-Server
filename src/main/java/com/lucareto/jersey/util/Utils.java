@@ -12,8 +12,7 @@ public class Utils {
         return NID + UUID.randomUUID().toString();
     }
     
-    public static boolean validateSignup(User user,
-                                  Map<String, Object> errors) {
+    public static boolean validateSignup(User user, Map<String, Object> errors) {
         String username = user.getUsername();
         String password = user.getPassword();
         String email = user.getEmail();

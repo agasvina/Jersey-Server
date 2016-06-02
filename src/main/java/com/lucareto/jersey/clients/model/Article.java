@@ -26,7 +26,7 @@ public class Article implements Serializable, Node, MongoDBObject {
     
     //TODO: implements Draft.JS (contentState)
     @NotNull(message="Body is required")
-    private String body;
+    private Object body;
     
     private String authorId;
     private int nominated;
@@ -52,11 +52,11 @@ public class Article implements Serializable, Node, MongoDBObject {
         this.title = title;
     }
 
-    public String getBody() {
+    public Object getBody() {
         return body;
     }
 
-    public void setBody(final String body) {
+    public void setBody(final Object body) {
         this.body = body;
     }
 

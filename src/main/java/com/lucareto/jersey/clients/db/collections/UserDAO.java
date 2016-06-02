@@ -68,8 +68,10 @@ public class UserDAO {
             byte [] hashedBytes = (new String(digest.digest(), StandardCharsets.UTF_8.name()).getBytes());
             return Base64.encodeBase64String(hashedBytes) + "," + salt;
         } catch (NoSuchAlgorithmException e) {
+            logger.error("MD5 algorithm is not available", e);
             throw new RuntimeException("MD5 algorithm is not available", e);
         } catch (UnsupportedEncodingException e) {
+            logger.error("MD5 algorithm is not available", e);
             throw new RuntimeException("UTF_8 is not available", e);
         }
     }

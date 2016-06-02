@@ -19,7 +19,7 @@ apply plugin: "org.akhikhl.gretty"
 dependencies {
    compile "javax.ws.rs:javax.ws.rs-api:${JAVAX_RS}"
    compile "org.glassfish.jersey.containers:jersey-container-servlet:${GLASSFISH}"
-   compile "org.glassfish.jersey.core:jersey-server:${GLASSFISH}"
+   compile "org.glassfish.jersey.core:jersey-server:${GLASSFISH}"   
    
    //JACKSON
    compile "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:${JACKSON}"
